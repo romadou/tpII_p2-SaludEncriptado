@@ -1,0 +1,20 @@
+<main class="home">
+  <div class="jumbotron">
+    <h1 class="display-3">Sistema de sensado de variables de salud por encriptación</h1>
+    <p class="lead">Este sistema provee una interacción básica con el usuario encargado de administrar los pacientes y sensores que se disponen. A su vez provee de una API para poder ser usada por los dispositivos lectores de datos.</p>
+    <hr class="my-4">
+    <p class="no-margin">Para ver más sobre la documentación de este sistema visitar <%= link_to "el proyecto en Github", "https://github.com/juanmanuelramallo/TDPII-sistema-de-salud/blob/master/README.md" %></p>
+  </div>
+  <hr class="my-4">
+  <div class="row">
+    <div class="col-md-4">
+      <%= render "statistic_card", number: @measures_count, description: "Cantidad total de mediciones tomadas" %>
+    </div>
+    <div class="col-md-4">
+      <%= render "statistic_card", number: @patients_count, description: "Cantidad total de pacientes atendidos" %>
+    </div>
+    <div class="col-md-4">
+      <%= render "statistic_card", number: @sensors_count, description: "Cantidad de sensores en funcionamiento" %>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,6 @@
+<%= simple_form_for @sensor do |f| %>
+  <%= f.input :name %>
+  <%= f.input :reads %>
+  <%= f.input :description, as: :text %>
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

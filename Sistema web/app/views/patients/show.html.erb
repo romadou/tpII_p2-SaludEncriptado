@@ -1,0 +1,62 @@
+<main class="patients-show">
+  <h1>Paciente #<%= "#{@patient.id} | #{@patient.name}" %></h1>
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Mediciones</h2>
+    </div>
+    <div class="col-md-4 text-right">
+      <%= link_to "Editar", edit_patient_path(@patient), class: "btn btn-outline-secondary" %>
+      <%= link_to "Eliminar", @patient, method: :delete, data: { confirm: "¿Estás seguro que deseas eliminar este paciente?" }, class: "btn btn-outline-danger" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <% if @patient.measures.any? %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Valor</th>
+              <th>Sensor</th>
+              <th>Realizado el</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @patient.measures.order(created_at: :desc).each_with_index do |measure, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= measure.value %> <br> <%= measure.decrypted_value %></td>
+                <td><%= measure.sensor.name %></td>
+                <td><%= l measure.created_at, format: :short %></td>
+                <td><%= link_to "Eliminar", measure, method: :delete %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <div class="alert alert-info">
+          No hay mediciones para mostrar
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Datos del paciente
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item">ID: <%= @patient.id %></li>
+          <li class="list-group-item">Nombre: <%= @patient.name %></li>
+          <li class="list-group-item">Email: <%= @patient.email %></li>
+          <li class="list-group-item">Teléfono: <%= @patient.phone %></li>
+          <li class="list-group-item">Descripción: <%= @patient.description %></li>
+          <li class="list-group-item">Creado el <%= l @patient.created_at, format: :long %></li>
+          <li class="list-group-item">Mediciones: <%= @patient.measures.count %></li>
+          <li class="list-group-item">Última medición: <%= @patient.measures.order(:created_at).last.try { |m| m.created_at.to_s :long } || '-' %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>

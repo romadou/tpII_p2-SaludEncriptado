@@ -1,0 +1,19 @@
+<div class="card text-center">
+  <% if defined? header %>
+    <div class="card-header">
+      <%= header %>
+    </div>
+  <% end %>
+  <div class="card-body">
+    <h1 class="card-title"><%= number || 0 %></h1>
+    <p class="card-text"><%= description %></p>
+    <% if defined? go_to %>
+      <%= link_to go_to.name, go_to.path, class: "btn btn-outline-primary" %>
+    <% end %>
+  </div>
+  <% if defined? footer %>
+    <div class="card-footer text-muted">
+      <%= footer %>
+    </div>
+  <% end %>
+</div>

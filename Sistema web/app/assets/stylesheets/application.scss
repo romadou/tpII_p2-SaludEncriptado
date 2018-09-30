@@ -1,0 +1,15 @@
+$theme-colors: (
+  "primary": #0F8B8D,
+  "secondary": #143642,
+  "danger": #800E13,
+  "warning": #EC9A29,
+  "info": #DAD2D8,
+  "success": #00B2CA
+);
+
+@import "bootstrap";
+
+body > main {
+  margin-top: 55.97px;
+  padding: 50px 0 50px 0;
+}

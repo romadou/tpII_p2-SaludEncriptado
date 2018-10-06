@@ -4,7 +4,7 @@
 
 Lectura del Proyecto 7 del 2017, punto de comienzo  
 
-```markdown 
+```markdown
 NOTA: llama la atención el manejo de las variables sensadas con el tipo de dato float, siendo que éste genera complicaciones en entornos de microcontroladores. A tener en cuenta.
 ```
 
@@ -20,5 +20,15 @@ $ bundle install
 $ rails db:create db:migrate
 ```
 
--------
+------
+## 5 de Octubre
 
+Reinstalación de Ruby y Rails por problemas con más de una versión instaladas (ver 29 de Septiembre).  
+
+Prueba de funcionamiento del servidor brindado, sin modificaciones: correcto.  
+- Generación de un perfil de paciente.
+- Generación de un perfil de sensor.
+
+
+
+------

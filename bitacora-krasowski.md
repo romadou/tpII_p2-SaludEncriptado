@@ -217,6 +217,57 @@ INTENTO DE SOLUCIÓN - En Arduino IDE:
 - DHT Sensor Library by Adafruit
 - Instalar
 
-NO SE PUDO REALIZAR LA PRUEBA
+NO SE PUDO REALIZAR LA PRUEBA POR FALTA DE TIEMPO
+
+------
+## 7 de Octubre
+
+Búsqueda de alternativa para el problema del 6 de Octubre con el DHT11. [Nuevo tutorial.](https://www.prometec.net/sensores-dht11/)  
+RESULTADO: funcionamiento normal (imagen "arduino_testDHT.png").  
+Sketch usado:  
+```c
+#include <DHT11.h>
+int pin=A0;
+DHT11 dht11(pin);
+void setup()
+{
+   Serial.begin(9600);
+  while (!Serial) {
+      ; // wait for serial port to connect. Needed for Leonardo only
+    }
+}
+
+void loop()
+{
+  int err;
+  float temp, humi;
+  if((err=dht11.read(humi, temp))==0)
+  {
+    Serial.print("temperature:");
+    Serial.print(temp);
+    Serial.print(" humidity:");
+    Serial.print(humi);
+    Serial.println();
+  }
+  else
+  {
+    Serial.println();
+    Serial.print("Error No :");
+    Serial.print(err);
+    Serial.println();    
+  }
+  delay(DHT11_RETRY_DELAY); //delay for reread
+}
+```
+Nuevo intento de conexión del shield Ethernet.
+PROBLEMA DETECTADO: la conexión directa a la PC no es una solución transparente.  
+ALTERNATIVA: Conectar el Ethernet Shield a un router (ver "bitacora_madou.md" - se usa otro cable que el provisto, por cuestiones de disposición de los muebles). _*FUNCIONAMIENTO CORRECTO*_
+
+```markdown
+NOTA: llama la atención el establecimiento de IP en "entrega.ino", siendo que primero se dice utilizar DHCP y después busca conectar con un cliente a una IP hardcodeada. A tener en cuenta.
+```  
+Prueba del código provisto por el grupo 7 del 2017.  
+RESULTADO: no funciona la conexión Ethernet (el Arduino manda constantemente a la terminal serie el mensaje "intentando conectar").  
+CONCLUSIÓN: El trabajo sobre el proyecto empezado será más que sobre la encriptación, sino también sobre entender el código y adaptarlo para su uso en otras condiciones que las dispuestas por los integrantes del grupo 7 del 2017.  
 
 ------

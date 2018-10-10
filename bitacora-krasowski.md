@@ -271,3 +271,18 @@ RESULTADO: no funciona la conexión Ethernet (el Arduino manda constantemente a 
 CONCLUSIÓN: El trabajo sobre el proyecto empezado será más que sobre la encriptación, sino también sobre entender el código y adaptarlo para su uso en otras condiciones que las dispuestas por los integrantes del grupo 7 del 2017.  
 
 ------
+## 8 de Octubre
+
+Consultas a la cátedra por dudas sobre el Informe de Avance I (ver mensajería de [Ideas](https://ideas.info.unlp.edu.ar))
+
+Escritura del Informe de Avance I
+
+------
+## 9 de Octubre
+
+Escritura del Informe de Avance I
+
+------
+## 10 de Octubre
+
+Escritura del Informe de Avance I

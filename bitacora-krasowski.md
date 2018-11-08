@@ -286,3 +286,143 @@ Escritura del Informe de Avance I
 ## 10 de Octubre
 
 Escritura del Informe de Avance I
+
+------
+## 1 de Noviembre
+
+Nueva prueba del código provisto por el grupo 7 del 2017.
+PASOS SEGUIDOS:
+- Se corre el servidor utilizando la directiva "rails server", que da por defecto la 0.0.0.0, puerto 3000.  
+- Se carga el sketch "entrega.ino" (desde ahora, "entrega") en el Arduino correctamente montado con sus periféricos y se abre el monitor serie, así como un browser en la 0.0.0.0:3000.  
+    - RESULTADO: el servidor carga la página; el monitor serie muestra la dirección IP asignada al shield Ethernet del Arduino, imprime el dato de temperatura que va a enviarse, y repite indefinidamente la sentencia "intentando conectar".  
+    - Lo anterior indica que el único punto que no está funcionando es la comunicación.  
+- Se acude al informe del grupo 7 del 2017. A partir de una mejor comprensión del código, se vuelve a lanzar el servidor, esta vez con la directiva "rails server -b 192.168.0.3 -p 3000" (para montar el servidor en dichos dirección y puerto) y se modifica el sketch de Arduino, líneas 73 y 80 (192.168.0.3 en lugar de 192.168.2.100).  
+    - RESULTADO: mismo que antes, por lo que se entiende que debe seguir existiendo algún detalle a revisar.  
+- Se modifica la línea 62 del sketch, para que se midan valores con el sensor de id 1 para la persona con id 1 (los únicos existentes hasta el momento).  
+    - RESULTADO: ¡la información llega adecuadamente a la página!
+
+------
+## 2 de Noviembre
+
+Réplica de las pruebas del 1 de Noviembre, incluyendo encriptación (sketch "encriptacion_con_aes.ino", desde ahora referenciado como "aes").
+Modificación del código, basado en el informe del grupo 7 del 2017 y los archivos disponibles, para lo que tendría que ser un código de envío de la temperatura encriptada.
+- CAMBIOS DEL ORIGINAL:  
+    - temp y hum son *int*, no *float*.  
+    - se modifica la IP para ser la del servidor Rails.  
+
+```c
+#include "aes.h"
+#include <DHT.h>
+#include <Ethernet.h>
+#include <Base64.h>
+
+#define DHTTYPE DHT11
+
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+
+EthernetServer server(80);    // Puerto 80 por defecto para HTTP
+
+//asdfasdf
+uint8_t key[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+
+const int DHTPin = 5;
+DHT dht(DHTPin, DHTTYPE);
+
+int t = 0;  //TEMPERATURA
+int h = 0;  //HUMEDAD
+
+void setup() {
+  Serial.begin(9600);
+  Ethernet.begin(mac);    //el servidor DHCP nos da una IP dinamica
+  Serial.print("My IP address: ");
+  Serial.println(Ethernet.localIP());   //la IP que me asigno
+  delay(3000);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  h = dht.readHumidity();       //leo humedad
+  t = dht.readTemperature();    //leo temperatura
+
+  if(isnan(h) || isnan(t)){
+      Serial.println("Fallo del sensor al medir");         
+      return;                                       //vuelvo al loop
+   }
+
+  EthernetClient client; // Inicializa cliente como servidor ethernet
+
+
+  String temperatureString = String(t);
+  int lengthtemp = temperatureString.length();
+  char temperature[lengthtemp];
+  temperatureString.toCharArray(temperature, temperatureString.length());
+  char datatemp[17]="0000000000000000";     //16 chars == 16 bytes
+  int i;
+  int j=0;
+  for (i = 17-lengthtemp; i < 17; i = i + 1) {
+    datatemp[i] = temperature[j];
+    j++;
+  }
+
+  Serial.print("Datatemp:");
+  Serial.println(datatemp);
+  aes18_enc_single(key, datatemp);
+  Serial.print("encrypted:");
+  Serial.print(datatemp);
+  Serial.println();
+ 
+  int encodedLen = base64_enc_len(sizeof(datatemp));
+  char encoded[encodedLen];
+  
+  Serial.print(datatemp); 
+  Serial.print(" = ");
+  
+  base64_encode(encoded, datatemp, sizeof(datatemp)); 
+  
+  Serial.println(encoded);
+
+  String enviar = String("{\"measure\": { \"value\":\"" + String(encoded) + "\",\"patient_id\":1,\"sensor_id\":1 } }");
+
+//String enviar = String("{\"measure\": { \"value\":\"" + String(f) + "\",\"patient_id\":1,\"sensor_id\":1 } }");
+
+  client.stop();
+   
+  if (client.available()) {
+      char c = client.read();
+      Serial.write(c);
+  }
+  
+  while(!client.connect("192.168.0.3", 3000)) { 
+    Serial.println("intentando conectar");
+    delay(500);
+  }
+  
+  Serial.println("connecting...");
+  client.println("POST /v1/measures HTTP/1.1");
+  client.println("Host: 192.168.0.3");
+  client.println("Content-Type: application/json; charset:utf-8");
+  client.print("Content-Length: ");
+  client.println(enviar.length());
+  client.println("Connnection: close");
+  client.println();
+  client.println(enviar);
+  client.println();
+  
+  delay(5000);           // 20 segundos
+  
+}
+```
+
+ERROR:  
+  *entrega:57:33: error: 'aes18_enc_single' was not declared in this scope*
+  
+------
+## 7 de Noviembre
+
+Escritura del Informe de Avance II
+
+------
+## 8 de Noviembre
+
+Escritura del Informe de Avance II

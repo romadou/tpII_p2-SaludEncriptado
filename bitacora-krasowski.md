@@ -434,7 +434,7 @@ ERROR: "iv must be 16 bytes" (ver imagen "passwd_error.png")
 
 *SITUACIÓN 2*
 
-Se deja de lado la encriptación single/EBC (aes128_enc_single) y se empieza a usar la aes128_cbc_enc (incluye como parámetro un iv, o *initialization vector* - ver bitacora-madou, 8 de noviembre)
+Se deja de lado la encriptación single/EBC (aes128_enc_single) y se empieza a usar la aes128_cbc_enc (incluye como parámetro un iv, o *initialization vector* - ver bitacora-madou, 7 de noviembre)
 Se envía la información y llega correctamente, aunque sigue habiendo errores de desencriptación (el problema, ahora, radica en cómo identificar el iv del envío en la recepción).
 
 *SITUACIÓN 3*

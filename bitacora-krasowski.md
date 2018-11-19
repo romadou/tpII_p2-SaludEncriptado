@@ -425,4 +425,36 @@ Escritura del Informe de Avance II
 ------
 ## 8 de Noviembre
 
+PRUEBA: envío de datos encriptados y codificados en Base64.
+
+*SITUACIÓN 1*
+
+Los datos llegan bien, no se pueden decodificar.
+ERROR: "iv must be 16 bytes" (ver imagen "passwd_error.png")
+
+*SITUACIÓN 2*
+
+Se deja de lado la encriptación single/EBC (aes128_enc_single) y se empieza a usar la aes128_cbc_enc (incluye como parámetro un iv, o *initialization vector* - ver bitacora-madou, 7 de noviembre)
+Se envía la información y llega correctamente, aunque sigue habiendo errores de desencriptación (el problema, ahora, radica en cómo identificar el iv del envío en la recepción).
+
+*SITUACIÓN 3*
+
+Debido a límites de tiempo, se interrumpen acá las pruebas de desencriptación.
+Para verificar que efectivamente los datos se mandan bien, y la información encriptada llega, se modifica el código del sistema web en *models/measure.rb* para que impriman el Base64 recibido (ver imagen "envio_encriptacion.png") y el código encriptado (debido a la incompatibilidad de representaciones, la copia no es exacta - ver imagen "received_crypto.png"):
+
+```ruby
+#caso 1:
+Base64.decode64(self[:value]).unpack("A*").first.to_i
+
+#caso 2:
+Base64.decode64(self[:value]).unpack("A*").first.force_encoding(Encoding::UTF_8)
+```
+
+
 Escritura del Informe de Avance II
+
+------
+## 15 de Noviembre
+
+Preparación de Presentación de Avance
+Presentación de Avance

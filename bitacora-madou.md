@@ -397,3 +397,19 @@ void dump2(String str,uint8_t buf[],int sz) {
 Finalización y Entrega del Informe de Avance II
 
 ---
+
+## 19 de Noviembre
+
+Cambio de configuraciones de conexión
+
+```markdown
+IP = 192.168.0.39
+
+Puertos :
+- Comunicación = 3000
+- Servidor = 8000 / 8080 (a definir)
+```
+
+_Verificar la red en la que trabaja el switch_
+
+---

@@ -29,20 +29,15 @@ void loop() {
      return;                                       //vuelvo al loop
   }
 
- // h = dht.readHumidity();       //leo humedad
- // t = dht.readTemperature();    //leo temperatura
+  // Clave
+   uint8_t key[] = {
+     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+   };
 
-  //uint8_t key[] = {0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5};  //clave de encriptacion
-
-    uint8_t key[] = { //asdfasdf
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-  };
+  // Vector de inicialización
+   uint8_t iv[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'};
   
- // if(isnan(h) || isnan(t)){
- //   Serial.println("Fallo del sensor al medir");         
- //   return;                                       //vuelvo al loop
- // }
 
   //Paso de float a vector de char de 16
   
@@ -55,31 +50,37 @@ void loop() {
   int lengthhum = humidityString.length();
   char humidity[lengthhum];
   humidityString.toCharArray(humidity, humidityString.length());
+
+  uint16_t dataLength = 16; // Tamaño del dato
   
-  char datatemp[17]="0000000000000000";     //16 chars == 16 bytes
-  char datahum[17]="0000000000000000";      //16 chars == 16 bytes
+  char datatemp[dataLength]="0000000000000000";     //16 chars == 16 bytes
+  char datahum[dataLength]="0000000000000000";      //16 chars == 16 bytes
   int i;
   int j=0;
-  for (i = 17-lengthtemp; i < 17; i = i + 1) {
+  for (i = dataLength-lengthtemp; i < dataLength; i = i + 1) {
     datatemp[i] = temperature[j];
     j++;
   }
   j=0;
-  for (i = 17-lengthhum; i < 17; i = i + 1) {
+  for (i = dataLength-lengthhum; i < dataLength; i = i + 1) {
     datahum[i] = humidity[j];
     j++;
   }
+  
+  dump("Key: ", key, sizeof(key));     //imprimo la clave
+  dump2("IV: ", iv, sizeof(iv));     //imprimo el vector de inicialización
 
-  int x;
-  dump("Key: ", x, key, sizeof(key));     //imprimo la clave
+  Serial.println();
 
   Serial.print("Datatemp:");
   Serial.println(datatemp);
-  aes128_enc_single(key,datatemp);    //encripto los datos de temperatura
+  //aes128_enc_single(key,datatemp);    //encripto los datos de temperatura
+  aes128_cbc_enc(key, iv, datatemp, dataLength);
   Serial.print("encrypted:");
-  Serial.print(datatemp);
+  Serial.write(datatemp, dataLength);
   Serial.println();
-  aes128_dec_single(key,datatemp);    //desencripto los datos de temperaura
+  //aes128_dec_single(key,datatemp);    //desencripto los datos de temperaura
+  aes128_cbc_dec(key, iv, datatemp, dataLength);
   Serial.print("Decrypted:");
   Serial.println(datatemp);
 
@@ -88,22 +89,24 @@ void loop() {
   
   Serial.print("Datahum:");
   Serial.println(datahum);
-  aes128_enc_single(key,datahum);     //encripto los datos de humedad
+  //aes128_enc_single(key,datahum);     //encripto los datos de humedad
+  aes128_cbc_enc(key, iv, datahum, dataLength);
   Serial.print("encrypted:");
-  Serial.print(datahum);
+  Serial.write(datahum, dataLength);
   Serial.println();
-  aes128_dec_single(key,datahum);     //desencripto los datos de humedad
+  //aes128_dec_single(key,datahum);     //desencripto los datos de humedad
+  aes128_cbc_dec(key, iv, datahum, dataLength);
   Serial.print("Decrypted:");
   Serial.println(datahum);
 
   Serial.println();
   
-  Serial.print("Temperatura en char[]:");
+  Serial.print("Temperatura en char[]: ");
   Serial.println(temperature);
     
   Serial.println();
   
-  Serial.print("Humedad en char[]:");
+  Serial.print("Humedad en char[]: ");
   Serial.println(humidity);
   
   Serial.println();
@@ -120,12 +123,23 @@ void loop() {
   
 }
 
-void dump(String str,int i,uint8_t buf[],int sz) { 
+void dump(String str,uint8_t buf[],int sz) {
+  int i; 
   Serial.println(str); 
   for(i=0; i<(sz); ++i) { 
     if(buf[i]<0x10) 
       Serial.print('0'); 
-      Serial.print(char(buf[i]), HEX); 
-    } 
-    Serial.println(); 
+    Serial.print(char(buf[i]), HEX); 
+  } 
+  Serial.println(); 
+} //Help function for printing the Output
+
+void dump2(String str,uint8_t buf[],int sz) {
+  int i; 
+  Serial.println(str); 
+  for(i=0; i<(sz); ++i) { 
+      Serial.print(char(buf[i]));
+      Serial.print(' '); 
+  } 
+  Serial.println(); 
 } //Help function for printing the Output

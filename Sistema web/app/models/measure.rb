@@ -10,6 +10,6 @@ class Measure < ApplicationRecord
     # AES.decrypt(self[:value], 'aaaabbbbccccdddd', { format: :plain })
 
     # Decode base 64
-    Base64.decode64(self[:value]).unpack("A*").first.to_i
+    Base64.decode64(self[:value]).unpack("A*").first.to_f
   end
 end

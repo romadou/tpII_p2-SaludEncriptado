@@ -453,3 +453,8 @@ Base64.decode64(self[:value]).unpack("A*").first.force_encoding(Encoding::UTF_8)
 
 Escritura del Informe de Avance II
 
+------
+## 15 de Noviembre
+
+Preparación de Presentación de Avance
+Presentación de Avance

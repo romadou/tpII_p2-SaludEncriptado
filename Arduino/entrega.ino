@@ -22,9 +22,9 @@ float h = 0;  //HUMEDAD
 
 void setup() {
   Serial.begin(9600);
-  Ethernet.begin(mac);    //el servidor DHCP nos da una IP dinamica
+  Ethernet.begin(mac, 192.168.0.39);    //asignación de una IP estática
   Serial.print("My IP address: ");
-  Serial.println(Ethernet.localIP());   //la IP que me asigno
+  Serial.println(Ethernet.localIP());   //muestra de la IP asignada al usuario
   delay(3000);
 }
 
@@ -85,14 +85,14 @@ void loop() {
       Serial.write(c);
   }
   
-  while(!client.connect("192.168.0.3", 3000)) { 
+  while(!client.connect("192.168.0.39", 3000)) { 
     Serial.println("intentando conectar");
     delay(500);
   }
   
   Serial.println("connecting...");
   client.println("POST /v1/measures HTTP/1.1");
-  client.println("Host: 192.168.0.3");
+  client.println("Host: 192.168.0.39");
   client.println("Content-Type: application/json; charset:utf-8");
   client.print("Content-Length: ");
   client.println(enviar.length());

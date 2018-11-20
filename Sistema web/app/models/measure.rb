@@ -5,11 +5,18 @@ class Measure < ApplicationRecord
   validates :value, :patient, :sensor, presence: true
 
   def decrypted_value
-    # The value should be in base 64
-    # If value is plain encrypted append { format: :plain }
-    # AES.decrypt(self[:value], 'aaaabbbbccccdddd', { format: :plain })
+    # El valor llega codificado en Base64
+    decoded = Base64.decode64(self[:value])
 
-    # Decode base 64
-    Base64.decode64(self[:value]).unpack("A*").first.to_f
+    c = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    # Objeto de cifrado en modo para desencriptar
+    c.decrypt
+    # Importante, puesto que la información viene sin padding
+    c.padding = 0
+    # La clave y el vector de inicialización deben ser los mismos que los puestos al encriptar
+    c.key = 'aaaabbbbccccdddd'
+    c.iv = 'ABCDEFGHIJKLMNOP'
+    d = c.update(decoded).unpack("A*").first.to_f
+
   end
 end

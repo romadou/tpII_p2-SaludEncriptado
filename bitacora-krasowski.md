@@ -458,3 +458,43 @@ Escritura del Informe de Avance II
 
 Preparación de Presentación de Avance
 Presentación de Avance
+
+------
+## 20 de Noviembre
+
+Búsqueda de la obtención del resultado sensado (temperatura) tal cual enviado: hasta aquí, se lo tenía encriptado y codificado en Base64.  
+
+Continuando el trabajo del 8 de Noviembre, se modifica el archivo de modelo *measure.rb* para el tratamiento del dato que llega. Se pasa del "Código A" (informe de avance 2) al "Código B"  
+
+- Código A  
+```ruby
+def decrypted_value
+  Base64.decode64(self[:value]).unpack("A*").first.to_f
+end
+```  
+
+- Código B  
+```ruby
+def decrypted_value
+  # El valor llega codificado en Base64
+  decoded = Base64.decode64(self[:value])
+
+  c = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+  # Objeto de cifrado en modo para desencriptar
+  c.decrypt
+  # Importante, puesto que la información viene sin padding
+  c.padding = 0
+  # La clave y el vector de inicialización deben ser los mismos que los puestos al encriptar
+  c.key = 'aaaabbbbccccdddd'
+  c.iv = 'ABCDEFGHIJKLMNOP'
+  d = c.update(decoded).unpack("A*").first.to_f
+
+end
+```
+
+PROBLEMA: las pruebas sólo se pueden realizar sobre el servidor montado en localhost (comando `rails server`), por el siguiente error para otras IPs:
+
+```bash
+Cannot assign requested address - bind(2) for "192.168.0.39" port 3000 (Errno::EADDRNOTAVAIL)
+```  
+

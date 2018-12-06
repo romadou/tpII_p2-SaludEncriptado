@@ -533,7 +533,7 @@ Escritura del Informe Final
 
 ## 6 de Diciembre
 
-Escritura del Informe Final
-Presentación
+Escritura del Informe Final  
+Presentación  
 
 ------

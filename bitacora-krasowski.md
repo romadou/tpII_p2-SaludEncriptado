@@ -498,3 +498,42 @@ PROBLEMA: las pruebas sólo se pueden realizar sobre el servidor montado en loca
 Cannot assign requested address - bind(2) for "192.168.0.39" port 3000 (Errno::EADDRNOTAVAIL)
 ```  
 
+------
+## 21 de Noviembre  
+
+Relativo al problema del 20 de Noviembre: en la red doméstica, sólo resulta posible montar el servidor en algún puerto no utilizado de 0.0.0.0, 127.0.0.x, localhost (hasta aquí, todos equivalentes), o 192.168.0.3 (IP asignada por el router, por DHCP, a la PC).  
+
+Pruebas del sistema sobre switch (Facultad de Informática)
+
+*SITUACIÓN 1*
+
+No hay una IP disponible por el puerto Ethernet. No se puede montar el servidor Rails.  
+El Arduino toma su IP estática sin problemas. Queda esperando la conexión.
+
+*SITUACIÓN 2*
+
+Se asigna una IP a la interfaz Ethernet de la PC:  
+```bash
+sudo ifconfig <interfaz-ethernet> 192.168.0.39
+```  
+
+PROBLEMA: El Arduino espera conectarse a 192.168.0.39:3000, pero está configurado en la IP 192.168.0.39
+SOLUCIÓN: Se asigna al Arduino la IP 192.168.0.38
+
+Comprobación de encriptado, envío, recepción y desencriptado correctos (ver imagen *comm_final.png*)
+Finalización de las pruebas
+
+------
+
+## 5 de Diciembre
+
+Escritura del Informe Final
+
+------
+
+## 6 de Diciembre
+
+Escritura del Informe Final
+Presentación
+
+------

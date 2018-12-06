@@ -22,7 +22,7 @@ float h = 0;  //HUMEDAD
 
 void setup() {
   Serial.begin(9600);
-  Ethernet.begin(mac, 192.168.0.39);    //asignación de una IP estática
+  Ethernet.begin(mac, 192.168.0.38);    //asignación de una IP estática
   Serial.print("My IP address: ");
   Serial.println(Ethernet.localIP());   //muestra de la IP asignada al usuario
   delay(3000);
@@ -75,8 +75,6 @@ void loop() {
   Serial.println(encoded);
 
   String enviar = String("{\"measure\": { \"value\":\"" + String(encoded) + "\",\"patient_id\":1,\"sensor_id\":1 } }");
-
-//String enviar = String("{\"measure\": { \"value\":\"" + String(f) + "\",\"patient_id\":1,\"sensor_id\":1 } }");
 
   client.stop();
    
